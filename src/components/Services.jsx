@@ -1,5 +1,9 @@
 
+import { useState } from 'react'
+
 function Services() {
+  const [activeService, setActiveService] = useState(null)
+
   const services = [
     {
       number: '01',
@@ -7,8 +11,12 @@ function Services() {
       subtitle: 'Ideas that inspire.',
       description:
         'Fresh concepts, thoughtful visuals and creative direction that bring ideas to life.',
-      image:
-        '/Blush Rose and Stone Arch Editorial.png',
+      details: [
+        'Creative direction',
+        'Visual storytelling',
+        'Campaign concepts',
+      ],
+      image: '/Blush Rose and Stone Arch Editorial.png',
       alt: 'Creative graphic design composition',
     },
     {
@@ -17,8 +25,12 @@ function Services() {
       subtitle: 'Identities that connect.',
       description:
         'Distinctive brand identities that communicate your story and make your business memorable.',
-      image:
-        '/rosebranding3.jpg',
+      details: [
+        'Brand strategy',
+        'Visual identity',
+        'Brand guidelines',
+      ],
+      image: '/rosebranding3.jpg',
       alt: 'Brand identity and stationery design',
     },
     {
@@ -27,8 +39,12 @@ function Services() {
       subtitle: 'Stories that make an impact.',
       description:
         'Engaging campaigns and compelling communication that help brands reach their audience.',
-      image:
-        '/roseAD.jpg',
+      details: [
+        'Digital campaigns',
+        'Social media creatives',
+        'Advertising concepts',
+      ],
+      image: '/roseAD.jpg',
       alt: 'Creative advertising and campaign presentation',
     },
   ]
@@ -36,11 +52,10 @@ function Services() {
   return (
     <section
       id="services"
-      className="bg-ivory px-6 py-24 md:px-12 md:py-12"
+      className="bg-ivory px-6 py-24 md:px-12 md:py-32"
     >
-      <div className="mx-auto max-w-360">
+      <div className="mx-auto max-w-[1440px]">
 
-        {/* Heading */}
         <div className="mb-16">
           <div className="mb-6 flex items-center gap-3">
             <span className="h-px w-10 bg-antique-rose" />
@@ -64,54 +79,112 @@ function Services() {
           </div>
         </div>
 
-        {/* Visual service cards */}
         <div className="grid gap-8 md:grid-cols-3">
-          {services.map((service) => (
-            <article key={service.number} className="group">
+          {services.map((service, index) => {
+            const isActive = activeService === index
 
-              {/* Image */}
-              <div className="relative aspect-[4/5] overflow-hidden bg-dusty-blush">
-                <img
-                  src={service.image}
-                  alt={service.alt}
-                  loading="lazy"
-                  className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                />
+            return (
+              <article key={service.number} className="group">
 
-                <div className="absolute inset-0 bg-gradient-to-t from-rose-black/50 via-transparent to-transparent" />
+                <button
+                  type="button"
+                  onClick={() =>
+                    setActiveService(isActive ? null : index)
+                  }
+                  aria-expanded={isActive}
+                  className="relative block w-full cursor-pointer overflow-hidden bg-dusty-blush text-left"
+                >
+                  <div className="relative aspect-[4/5] overflow-hidden">
+                    <img
+                      src={service.image}
+                      alt={service.alt}
+                      loading="lazy"
+                      className={`h-full w-full object-cover transition-transform duration-700 ease-out ${
+                        isActive
+                          ? 'scale-105'
+                          : 'group-hover:scale-105'
+                      }`}
+                    />
 
-                <div className="absolute left-6 top-6">
-                  <span className="text-sm tracking-widest text-white">
-                    {service.number}
-                  </span>
-                </div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-rose-black/60 via-transparent to-transparent" />
 
-                <div className="absolute bottom-6 left-6 right-6 flex items-end justify-between">
-                  <p className="font-display text-4xl italic text-white md:text-5xl">
-                    {service.title}
+                    <span className="absolute left-6 top-6 text-xs tracking-widest text-white">
+                      {service.number} / 03
+                    </span>
+
+                    <div className="absolute bottom-6 left-6 right-6 flex items-end justify-between">
+                      <div>
+                        <p className="mb-2 text-xs tracking-widest text-white/80">
+                          {service.subtitle}
+                        </p>
+                        <h3 className="font-display text-4xl italic text-white md:text-5xl">
+                          {service.title}
+                        </h3>
+                      </div>
+
+                      <span
+                        className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-white text-2xl text-white transition-all duration-500 ${
+                          isActive
+                            ? 'rotate-45 bg-white text-rose-black'
+                            : 'group-hover:bg-white group-hover:text-rose-black'
+                        }`}
+                      >
+                        ↗
+                      </span>
+                    </div>
+                  </div>
+                </button>
+
+                <div className="border-b border-rose-black/15 py-7">
+                  <p className="font-display text-xl italic text-antique-rose">
+                    {service.subtitle}
                   </p>
 
-                  <span className="flex h-11 w-11 items-center justify-center rounded-full border border-white/70 text-xl text-white transition-all duration-300 group-hover:rotate-45 group-hover:bg-white group-hover:text-rose-black">
-                    ↗
-                  </span>
+                  <p className="mt-4 text-sm leading-7 text-rose-black/65">
+                    {service.description}
+                  </p>
+
+                  <div
+                    className={`grid transition-[grid-template-rows] duration-500 ease-in-out ${
+                      isActive ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
+                    }`}
+                  >
+                    <div className="overflow-hidden">
+                      <div className="pt-5">
+                        <p className="mb-3 text-[10px] tracking-[0.2em] text-antique-rose">
+                          WHAT IT INCLUDES
+                        </p>
+
+                        <ul className="space-y-3">
+                          {service.details.map((detail) => (
+                            <li
+                              key={detail}
+                              className="flex items-center gap-3 text-sm text-rose-black/80"
+                            >
+                              <span className="h-1.5 w-1.5 rounded-full bg-antique-rose" />
+                              {detail}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setActiveService(isActive ? null : index)
+                    }
+                    className="mt-5 text-[10px] uppercase tracking-[0.2em] text-burgundy transition-colors hover:text-antique-rose"
+                  >
+                    {isActive ? 'Show less −' : 'Explore service +'}
+                  </button>
                 </div>
-              </div>
-
-              {/* Description */}
-              <div className="border-b border-rose-black/15 py-7">
-                <p className="font-display text-xl italic text-antique-rose">
-                  {service.subtitle}
-                </p>
-
-                <p className="mt-4 max-w-sm text-sm leading-7 text-rose-black/65">
-                  {service.description}
-                </p>
-              </div>
-            </article>
-          ))}
+              </article>
+            )
+          })}
         </div>
 
-        {/* Bottom CTA */}
         <div className="mt-16 flex flex-col justify-between gap-6 border-t border-rose-black/15 pt-8 md:flex-row md:items-center">
           <p className="font-display text-2xl italic text-burgundy">
             Creativity with purpose.
@@ -119,7 +192,7 @@ function Services() {
 
           <a
             href="#contact"
-            className="group inline-flex items-center justify-center gap-5 bg-burgundy px-7 py-4 text-xs uppercase tracking-widest text-white transition-colors duration-300 hover:bg-antique-rose"
+            className="group inline-flex w-fit items-center justify-center gap-5 bg-burgundy px-7 py-4 text-xs uppercase tracking-widest text-white transition-colors duration-300 hover:bg-antique-rose"
           >
             Let's create together
             <span className="transition-transform duration-300 group-hover:translate-x-2">
